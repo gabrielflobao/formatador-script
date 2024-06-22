@@ -2,7 +2,7 @@ package com.br.types;
 
 public enum Tipos {
     CREATE("CREATE"),
-    UPDATE("ALTER");
+    ALTER("ALTER");
     private String value;
 
     Tipos(String value) {

@@ -16,10 +16,10 @@ public class CreatorName {
         String year =String.valueOf(LocalDate.now().getYear())+".";
         String hora = formatterInteger(LocalDateTime.now().getHour())+".";
         String minuto = formatterInteger(LocalDateTime.now().getMinute());
-        return PREFIX_YEAR+year+month+day+month+hora+minuto+"_"+tipos.getDesc()+"_"+sufixo;
+        return PREFIX_YEAR+year+month+day+month+hora+minuto+"__"+tipos.getDesc()+"_"+sufixo;
     }
 
-    public String formatterInteger(Integer day){
-        return day <10 ? "0"+day : day+"";
+    public String formatterInteger(Integer integer){
+        return integer <10 ? "0"+integer : integer+"";
     }
 }

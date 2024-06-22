@@ -9,6 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -20,9 +21,18 @@ public class Frame extends JFrame {
     private JTextField inputField;
     private JButton createButton;
     private JButton clearButton;
+
     private final String  TITLE =  "Formatador de Script";
+    private final String LABEL_UPLOAD = "Arquivo SQL:";
+
 
     public Frame() {
+
+        URL iconURL = getClass().getClassLoader().getResource("imgs/img.png");
+        ImageIcon icon = new ImageIcon(iconURL);
+        this.setIconImage(icon.getImage());
+
+
         setTitle(TITLE);
         setSize(600, 300);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -33,16 +43,9 @@ public class Frame extends JFrame {
         gbc.insets = new Insets(10, 10, 10, 10);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        // Label e TextField para upload de arquivo
-        JLabel fileLabel = new JLabel("Arquivo SQL:");
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        add(fileLabel, gbc);
+        buildUploadLineInput(gbc);
 
-        filePathField = new JTextField(20);
-        gbc.gridx = 1;
-        gbc.gridy = 0;
-        add(filePathField, gbc);
+
 
         JButton uploadButton = new JButton("Upload");
         uploadButton.addActionListener(new ActionListener() {
@@ -59,31 +62,13 @@ public class Frame extends JFrame {
         gbc.gridx = 2;
         gbc.gridy = 0;
         add(uploadButton, gbc);
-
-        // Lista suspensa (ComboBox)
-        JLabel comboLabel = new JLabel("Qual ação do SCRIPT ?");
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        add(comboLabel, gbc);
-
-        comboBox = new JComboBox<>();
-        for (Tipos tipos : Tipos.values()) {
-            comboBox.addItem(tipos.toString());
-        }
-        gbc.gridx = 1;
-        gbc.gridy = 1;
+        buildCombox(gbc);
         add(comboBox, gbc);
 
-        // Label e Input Field
-        JLabel inputLabel = new JLabel("Nome novo Script:");
-        gbc.gridx = 0;
-        gbc.gridy = 2;
+        JLabel inputLabel = buildLabelInputSCript(gbc);
         add(inputLabel, gbc);
+        buildInputSCript(gbc);
 
-        inputField = new JTextField(20);
-        inputField.setSize(200,50);
-        gbc.gridx = 1;
-        gbc.gridy = 2;
         add(inputField, gbc);
 
         // Botões
@@ -126,4 +111,40 @@ public class Frame extends JFrame {
         add(clearButton, gbc);
     }
 
+    public void buildUploadLineInput(GridBagConstraints gbc) {
+        JLabel fileLabel = new JLabel(LABEL_UPLOAD);
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        add(fileLabel, gbc);
+        filePathField = new JTextField(20);
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        add(filePathField, gbc);
+    }
+
+    public void buildCombox(GridBagConstraints gbc) {
+        JLabel comboLabel = new JLabel("Qual ação do SCRIPT ?");
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        add(comboLabel, gbc);
+
+        comboBox = new JComboBox<>();
+        for (Tipos tipos : Tipos.values()) {
+            comboBox.addItem(tipos.toString());
+        }
+        gbc.gridx = 1;
+        gbc.gridy = 1;
+    }
+    public JLabel buildLabelInputSCript(GridBagConstraints gbc) {
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        return new JLabel("Nome novo Script:");
+    }
+
+    public void buildInputSCript(GridBagConstraints gbc) {
+        this.inputField = new JTextField(20);
+        this.inputField.setSize(200,50);
+        gbc.gridx = 1;
+        gbc.gridy = 2;
+    }
 }
