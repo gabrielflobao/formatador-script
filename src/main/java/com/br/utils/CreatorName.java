@@ -16,7 +16,7 @@ public class CreatorName {
         String year =String.valueOf(LocalDate.now().getYear())+".";
         String hora = formatterInteger(LocalDateTime.now().getHour())+".";
         String minuto = formatterInteger(LocalDateTime.now().getMinute());
-        return PREFIX_YEAR+year+month+day+month+hora+minuto+"__"+tipos.getDesc()+"_"+sufixo+EXTENSION;
+        return PREFIX_YEAR+year+month+day+hora+minuto+"__"+tipos.getDesc()+"_"+sufixo+EXTENSION;
     }
 
     public String formatterInteger(Integer integer){
