@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 
 public class CreatorName {
     private final Character PREFIX_YEAR = 'V';
-
+    private final String EXTENSION = '.sql';
     public CreatorName(){}
 
     public  String createNameFile(Tipos tipos ,String sufixo){
@@ -16,7 +16,7 @@ public class CreatorName {
         String year =String.valueOf(LocalDate.now().getYear())+".";
         String hora = formatterInteger(LocalDateTime.now().getHour())+".";
         String minuto = formatterInteger(LocalDateTime.now().getMinute());
-        return PREFIX_YEAR+year+month+day+month+hora+minuto+"__"+tipos.getDesc()+"_"+sufixo;
+        return PREFIX_YEAR+year+month+day+month+hora+minuto+"__"+tipos.getDesc()+"_"+sufixo+EXTENSION;
     }
 
     public String formatterInteger(Integer integer){
