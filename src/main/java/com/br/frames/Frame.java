@@ -1,5 +1,10 @@
 package com.br.frames;
 
+import com.br.builders.JLabelBuilder;
+import com.br.builders.JTextFieldBuilder;
+import com.br.types.DimensionGrid;
+import com.br.types.JLabelGrid;
+import com.br.types.JTextFieldGrid;
 import com.br.types.Tipos;
 import com.br.utils.CreatorName;
 
@@ -16,14 +21,17 @@ import java.nio.file.Paths;
 
 public class Frame extends JFrame {
 
-    private JTextField filePathField;
+    private JTextFieldGrid inputPathFile;
     private JComboBox<String> comboBox;
-    private JTextField inputField;
+    private JTextFieldGrid inputScriptNewName;
     private JButton createButton;
     private JButton clearButton;
 
     private final String  TITLE =  "Formatador de Script";
     private final String LABEL_UPLOAD = "Arquivo SQL:";
+    private final String NOME_SCRIPT = "Nome da Tabela/Trigger/View:";
+    private final String BOTAO_UPLOAD = "Upload";
+    private final String ACAO_SCRIPT = "Qual ação do SCRIPT ?";
 
 
     public Frame() {
@@ -33,99 +41,64 @@ public class Frame extends JFrame {
         this.setIconImage(icon.getImage());
 
 
-        setTitle(TITLE);
-        setSize(600, 300);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLocationRelativeTo(null);
-        setLayout(new GridBagLayout());
-
+        inicializeLayoutFrame();
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        buildUploadLineInput(gbc);
 
+       JLabelGrid fileLabel = new JLabelBuilder()
+                .setTextLabel(LABEL_UPLOAD)
+                .setDimensionGrid(new DimensionGrid(0,0))
+                .setHorizontalAlignment(0)
+                .build();
+        gbc.gridx = fileLabel.getDimensions().getX();
+        gbc.gridy = fileLabel.getDimensions().getY();
+        add(fileLabel, gbc);
 
+    inputPathFile = new JTextFieldBuilder()
+                .setColumns(20)
+                .setDimensionGrid(new DimensionGrid(1,0))
+                .build();
+        gbc.gridx = inputPathFile.getDimensions().getX();
+        gbc.gridy = inputPathFile.getDimensions().getY();
+        add(inputPathFile, gbc);
 
-        JButton uploadButton = new JButton("Upload");
-        uploadButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                JFileChooser fileChooser = new JFileChooser();
-                int result = fileChooser.showOpenDialog(null);
-                if (result == JFileChooser.APPROVE_OPTION) {
-                    File selectedFile = fileChooser.getSelectedFile();
-                    filePathField.setText(selectedFile.getAbsolutePath());
-                }
-            }
-        });
-        gbc.gridx = 2;
+        JButton uploadButton = getUploadButton();
+        gbc.gridx = 3;
         gbc.gridy = 0;
         add(uploadButton, gbc);
-        buildCombox(gbc);
-        add(comboBox, gbc);
+//////////////////////////////////////////////////////////////////////
 
-        JLabel inputLabel = buildLabelInputSCript(gbc);
-        add(inputLabel, gbc);
-        buildInputSCript(gbc);
 
-        add(inputField, gbc);
+        JLabelGrid scriptLabel = new JLabelBuilder()
+                .setTextLabel(NOME_SCRIPT)
+                .setDimensionGrid(new DimensionGrid(0,1))
+                .setHorizontalAlignment(0)
+                .build();
+        gbc.gridx = scriptLabel.getDimensions().getX();
+        gbc.gridy = scriptLabel.getDimensions().getY();
+        add(scriptLabel, gbc);
 
-        // Botões
-        createButton = new JButton("Criar");
-        CreatorName creatorName = new CreatorName();
-        createButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String filePath = filePathField.getText();
-                String selectedElement = (String) comboBox.getSelectedItem();
-                String inputText = inputField.getText();
 
-                Path originalPath = Paths.get(filePathField.getText());
-                String newName = creatorName.createNameFile(Tipos.valueOf((((String) comboBox.getSelectedItem()).toUpperCase())),inputText);
-                Path newPath = originalPath.getParent().resolve(newName);
-                try {
-                    Files.copy(originalPath, newPath);
-                } catch (IOException ex) {
-                    throw new RuntimeException(ex);
-                }
-                // Adicione sua lógica aqui
-                JOptionPane.showMessageDialog(null, "Arquivo: " + filePath + "\nTipo: " + selectedElement + "\nNovo Nome: " + newName);
-            }
-        });
-        gbc.gridx = 0;
-        gbc.gridy = 3;
-        add(createButton, gbc);
+        this.inputScriptNewName = new JTextFieldBuilder()
+                .setSize(200,50)
+                .setColumns(20)
+                .setDimensionGrid(new DimensionGrid(1,1))
+                .build();
+        gbc.gridx = inputScriptNewName.getDimensions().getX();
+        gbc.gridy = inputScriptNewName.getDimensions().getY();
+        add(inputScriptNewName, gbc);
 
-        clearButton = new JButton("Limpar");
-        clearButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                filePathField.setText("");
-                comboBox.setSelectedIndex(0);
-                inputField.setText("");
-            }
-        });
-        gbc.gridx = 1;
-        gbc.gridy = 3;
-        add(clearButton, gbc);
-    }
+    //////////////////////////////////////////////////////////
 
-    public void buildUploadLineInput(GridBagConstraints gbc) {
-        JLabel fileLabel = new JLabel(LABEL_UPLOAD);
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        add(fileLabel, gbc);
-        filePathField = new JTextField(20);
-        gbc.gridx = 1;
-        gbc.gridy = 0;
-        add(filePathField, gbc);
-    }
-
-    public void buildCombox(GridBagConstraints gbc) {
-        JLabel comboLabel = new JLabel("Qual ação do SCRIPT ?");
-        gbc.gridx = 0;
-        gbc.gridy = 1;
+        JLabelGrid comboLabel = new JLabelBuilder()
+                .setDimensionGrid(new DimensionGrid(0,2))
+                .setText(ACAO_SCRIPT)
+                .setHorizontalAlignment(0)
+                .build();
+        gbc.gridx = comboLabel.getDimensions().getX();
+        gbc.gridy = comboLabel.getDimensions().getY();
         add(comboLabel, gbc);
 
         comboBox = new JComboBox<>();
@@ -133,18 +106,72 @@ public class Frame extends JFrame {
             comboBox.addItem(tipos.toString());
         }
         gbc.gridx = 1;
-        gbc.gridy = 1;
-    }
-    public JLabel buildLabelInputSCript(GridBagConstraints gbc) {
-        gbc.gridx = 0;
         gbc.gridy = 2;
-        return new JLabel("Nome novo Script:");
+        add(comboBox,gbc);
+
+
+        createButton = new JButton("Criar");
+        CreatorName creatorName = new CreatorName();
+        createButton.addActionListener(e -> {
+            String filePath = inputPathFile.getText();
+            String selectedElement = (String) comboBox.getSelectedItem();
+            String inputText = inputScriptNewName.getText();
+            Path originalPath = Paths.get(inputPathFile.getText());
+            String newName = creatorName.createNameFile(Tipos.valueOf((((String) comboBox.getSelectedItem()).toUpperCase())),inputText);
+            Path newPath = originalPath.getParent().resolve(newName);
+            try {
+                Files.copy(originalPath, newPath);
+            } catch (IOException ex) {
+                JOptionPane.showMessageDialog(null,ex.getMessage());
+                throw new RuntimeException(ex);
+            }
+            JOptionPane.showMessageDialog(null, "Arquivo: " + filePath + "\nTipo: " + selectedElement + "\nNovo Nome: " + newName);
+        });
+
+      gbc.gridx = 0;
+        gbc.gridy = 3;
+        add(createButton, gbc);
+
+      clearButton = getClearButton();
+        gbc.gridx = 1;
+        gbc.gridy = 3;
+        add(clearButton, gbc);
+
     }
 
-    public void buildInputSCript(GridBagConstraints gbc) {
-        this.inputField = new JTextField(20);
-        this.inputField.setSize(200,50);
-        gbc.gridx = 1;
-        gbc.gridy = 2;
+    private JButton getUploadButton() {
+        JButton uploadButton = new JButton(BOTAO_UPLOAD);
+        uploadButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JFileChooser fileChooser = new JFileChooser();
+                int result = fileChooser.showOpenDialog(null);
+                if (result == JFileChooser.APPROVE_OPTION) {
+                    File selectedFile = fileChooser.getSelectedFile();
+                    inputPathFile.setText(selectedFile.getAbsolutePath());
+                }
+            }
+        });
+        return uploadButton;
+    }
+    private JButton getClearButton() {
+        JButton clearButton = new JButton("Limpar");
+        clearButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                inputPathFile.setText("");
+                comboBox.setSelectedIndex(0);
+                inputScriptNewName.setText("");
+            }
+        });
+        return clearButton;
+    }
+
+    public void inicializeLayoutFrame(){
+        setTitle(TITLE);
+        setSize(600, 300);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
+        setLayout(new GridBagLayout());
     }
 }
